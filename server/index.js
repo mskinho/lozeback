@@ -12,14 +12,32 @@ const config = require('./config/database'); // Mongoose Config
 const path = require('path'); // NodeJS Package for file paths
 const authentication = require('./routes/authentication'); // Import Authentication Routes
 const tickets = require('./routes/tickets'); // Import Ticket Routes
-
 const bodyParser = require('body-parser'); // Parse incoming request bodies in a middleware before your handlers, available under the req.body property.
 const http = require('http').Server(app);
-
-
+const io = require('socket.io')(http);
 const cors = require('cors'); // CORS is a node.js package for providing a Connect/Express middleware that can be used to enable CORS with various options.
 const port = process.env.PORT || '8080';
+// socket.io connection
+io.on('connection', (socket) => {
+    console.log("Connected to Socket!!"+ socket.id);
+    // Receiving Tickets from client
+    socket.on('newTicket', (Ticket) => {
+      console.log('socketData: '+JSON.stringify(Ticket));
+      TicketController.newTicket(io,Ticket);
+    });
 
+    // Receiving Updated Ticket from client
+    socket.on('updateTicket', (Ticket) => {
+      console.log('socketData: '+JSON.stringify(Ticket));
+      TicketController.updateTicket(io,Ticket);
+    });
+
+    // Receiving Ticket to Delete
+    socket.on('deleteTicket', (Ticket) => {
+      console.log('socketData: '+JSON.stringify(Ticket));
+      TicketController.deleteTicket(io,Ticket);
+    });
+  })
  // Allows heroku to set port
 // Database Connection
 mongoose.connect(config.uri,  (err) => {
