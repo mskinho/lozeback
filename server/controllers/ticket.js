@@ -23,10 +23,10 @@ const upload = multer({ storage: storage });
      CREATE NEW BLOG
   =============================================================== */
   exports.postFile = (req, res, next) => {
-    
-    
+
+
       const ticket = new Ticket({
-        
+
         fieldname: req.files[0].fieldname,
         originalname: req.files[0].originalname,
         encoding: req.files[0].encoding,
@@ -36,85 +36,51 @@ const upload = multer({ storage: storage });
         path: req.files[0].path,
         size: req.files[0].size,
         title: req.body.title, // Title field
-      
+
         // imageDimension: fileDimension,
         fileUploadDate: Date.now()
       });
-      
+
       // Save ticket into database
       ticket.save((err, ticket) => {
         // Check if error
         if (err) {
-          
+
           res.json({ success: false, message: 'problema no envio.' });
-          
+
         } else {
           res.json({ success: true, message: 'Ticket saved!' }); // Return success message
         }
-        
-       
+
+
       });
     };
 
-  exports.newTicket = (req, res) => {
-   
-    if (req.file){
-      upload(req, res, function (err) {
-       if (err) {
-        // An error occurred when uploading
-        return res.status(422).send("an Error occured");
-       }  
-       res.json({ success: true, message: 'imagem enviada!' });
-     }); 
-    }
-     
+  exports.newTicket = (io,T) => {
+
+    // if (req.file){
+    //   upload(req, res, function (err) {
+    //    if (err) {
+    //     // An error occurred when uploading
+    //     return res.status(422).send("an Error occured");
+    //    }
+    //    res.json({ success: true, message: 'imagem enviada!' });
+    //  });
+    // }
+
     // Check if ticket title was provided
-    if (!req.body.title) {
-      res.json({ success: false, message: 'Ticket title is required.' }); // Return error message
-    } else {
-      // Check if ticket body was provided
-      if (!req.body.body) {
-        res.json({ success: false, message: 'Ticket body is required.' }); // Return error message
-      } else {
-        // Check if ticket's creator was provided
-        if (!req.body.createdBy) {
-          res.json({ success: false, message: 'Ticket creator is required.' }); // Return error
-        } else {
-          // Create the ticket object for insertion into database
-          const ticket = new Ticket({
-            title: req.body.title, // Title field
-            body: req.body.body, // Body field
-            createdBy: req.body.createdBy,
-            imgticket: req.body.imgticket
-          });
-         
-          // Save ticket into database
-          ticket.save((err, ticket) => {
-            // Check if error
-            if (err) {
-              // Check if error is a validation error
-              if (err.errors) {
-                // Check if validation error is in the title field
-                if (err.errors.title) {
-                  res.json({ success: false, message: err.errors.title.message }); // Return error message
-                } else {
-                  // Check if validation error is in the body field
-                  if (err.errors.body) {
-                    res.json({ success: false, message: err.errors.body.message }); // Return error message
-                  } else {
-                    res.json({ success: false, message: err }); // Return general error message
-                  }
-                }
-              } else {
-                res.json({ success: false, message: err }); // Return general error message
-              }
-            } else {
-              res.json({ success: true, message: 'Ticket saved!' }); // Return success message
-            }
-          });
-        }
-      }
+    let result;
+  const newTicket = new Ticket(T);
+  newTicket.save((err,Ticket) => {
+    if(err){
+      result = {'success':false,'message':'Some Error','error':err};
+      console.log(result);
     }
+    else{
+      const result = {'success':true,'message':'Ticket Added Successfully',Ticket}
+       io.emit('TicketAdded', result);
+    }
+  })
   };
 
   /* ===============================================================
@@ -139,7 +105,7 @@ const upload = multer({ storage: storage });
 
   exports.oneTicket = (req, res) =>{
     var ticketId = req.params.id;
-    
+
       Ticket.findById(ticketId, (err, ticket) => {
         if(err){
           res.status(500).send({message: 'Error en la petición.'});
@@ -151,7 +117,7 @@ const upload = multer({ storage: storage });
           }
         }
       });
-    
+
   };
   /* ===============================================================
      GET SINGLE BLOG
@@ -452,4 +418,4 @@ const upload = multer({ storage: storage });
     }
   };
 
- 
+

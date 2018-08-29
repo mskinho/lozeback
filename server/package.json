@@ -1,7 +1,7 @@
 {
-  "name": "mean-ang2",
+  "name": "loze",
   "version": "1.0.0",
-  "description": "MEAN Stack with Angular 2",
+  "description": "MEAN Stack with Angular 4",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gugui3z24/MEAN-Stack-With-Angular-2-Tutorial.git"
+    "url": "https://github.com/mskinho/lozeback.git"
   },
   "keywords": [
     "MEAN",
@@ -21,9 +21,9 @@
   "author": "David Acosta",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/gugui3z24/MEAN-Stack-With-Angular-2-Tutorial/issues"
+    "url": "https://github.com/mskinho/lozeback/issues"
   },
-  "homepage": "https://github.com/gugui3z24/MEAN-Stack-With-Angular-2-Tutorial#readme",
+  "homepage": "https://github.com/mskinho/lozeback/blob/master/README.md",
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.17.2",
