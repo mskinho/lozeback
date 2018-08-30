@@ -1,0 +1,9 @@
+mat-toolbar{
+    background: rgb(13, 156, 252)
+}
+mat-toolbar a{
+    font-size: 21px;
+    padding: 10px 10px 10px;
+    text-decoration: none;
+    color: #fff;
+}

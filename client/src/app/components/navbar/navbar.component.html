@@ -1,0 +1,15 @@
+<mat-toolbar color="primary" >
+
+    <span>Responsive Navigation</span>
+
+    <a  routerLink="/home">Home</a>
+
+
+    <a mat-flat-button *ngIf="authService.loggedIn()" routerLink="/condominio">condominio</a>
+    <a mat-flat-button  *ngIf="authService.loggedIn()" routerLink="/ticket">Ticket</a>
+    <a mat-flat-button  *ngIf="authService.loggedIn()" routerLink="/comment-ticket">Comment</a>
+    <a mat-flat-button *ngIf="!authService.loggedIn()" routerLink="/login">Login</a>
+    <a mat-flat-button *ngIf="authService.loggedIn()" href="#" (click)="onLogoutClick()">Logout</a>
+    <a mat-flat-button *ngIf="authService.loggedIn()" routerLink="/register">Register</a>
+
+  </mat-toolbar>
