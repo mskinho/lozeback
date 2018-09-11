@@ -1,3 +1,28 @@
-<p>
-  ticket works!
-</p>
+<div class="form-group">
+
+    <!-- New Ticket Form -->
+  <form [formGroup]="ticketForm" (ngSubmit)=" sendTicket()">
+      <mat-form-field>
+            <input matInput id="title" name="title" placeholder="title" formControlName="title">
+      </mat-form-field><br/>
+      <mat-form-field>
+        <textarea  matInput id="body" name="body" placeholder="body" formControlName="body" ></textarea>
+      </mat-form-field><br/>
+      <!-- Submit Button -->
+     <button mat-stroked-button color="primary"   type="submit" >Submit</button>
+    </form>
+  </div>
+<div class="panel panel-primary" *ngFor="let ticket of tickets">
+
+    <!-- Panel Title -->
+    <div class="panel-heading">
+      <h3 class="panel-title">{{ ticket?.title }}</h3>
+    </div>
+
+    <!-- Panel Body -->
+    <div class="panel-body">
+      {{ ticket?.body }}
+    </div>
+
+    </div>
+

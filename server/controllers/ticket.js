@@ -56,37 +56,48 @@ const upload = multer({ storage: storage });
       });
     };
 
-  exports.newTicket = (io,T) => {
+    exports.addTicket = (req, res, next) => {
 
-    // if (req.file){
-    //   upload(req, res, function (err) {
-    //    if (err) {
-    //     // An error occurred when uploading
-    //     return res.status(422).send("an Error occured");
-    //    }
-    //    res.json({ success: true, message: 'imagem enviada!' });
-    //  });
-    // }
 
-    // Check if ticket title was provided
-    let result;
-  const newTicket = new Ticket(T);
-  newTicket.save((err,Ticket) => {
+        const ticket = new Ticket({
+    title: req.body.title, // Title field
+    body: req.body.body, // Body field
+    createdBy: req.body.createdBy,
+    imgticket: req.body.imgticket
+  });
+  ticket.save((err,Ticket) => {
     if(err){
       result = {'success':false,'message':'Some Error','error':err};
       console.log(result);
     }
     else{
       const result = {'success':true,'message':'Ticket Added Successfully',Ticket}
-       io.emit('TicketAdded', result);
+          console.log(result);
     }
   })
   };
+  /* ===============================================================
+     Update Ticket
+  =============================================================== */
+  exports.updateTicket = (io,T) => {
+    let result;
+    Ticket.findOne({ _id:T.id }, T, { new:true }, (err,ticket) => {
+      if(err){
+      result = {'success':false,'message':'Some Error','error':err};
+      console.log(result);
+      }
+      else{
+       result = {'success':true,'message':'Ticket Updated Successfully',ticket};
+       io.emit('TicketUpdated', result);
+      }
+    })
+  }
+
 
   /* ===============================================================
      GET ALL BLOGS
   =============================================================== */
-  exports.allTickets = (req, res) => {
+  exports.getTickets = (req, res) => {
     // Search database for all ticket posts
     Ticket.find({}, (err, tickets) => {
       // Check if error was found or not
@@ -162,60 +173,6 @@ const upload = multer({ storage: storage });
     }
   };
 
-  /* ===============================================================
-     UPDATE BLOG POST
-  =============================================================== */
-  exports.updateTicket = (req, res) => {
-    // Check if id was provided
-    if (!req.body._id) {
-      res.json({ success: false, message: 'No ticket id provided' }); // Return error message
-    } else {
-      // Check if id exists in database
-      Ticket.findOne({ _id: req.body._id }, (err, ticket) => {
-        // Check if id is a valid ID
-        if (err) {
-          res.json({ success: false, message: 'Not a valid ticket id' }); // Return error message
-        } else {
-          // Check if id was found in the database
-          if (!ticket) {
-            res.json({ success: false, message: 'Ticket id was not found.' }); // Return error message
-          } else {
-            // Check who user is that is requesting ticket update
-            User.findOne({ _id: req.decoded.userId }, (err, user) => {
-              // Check if error was found
-              if (err) {
-                res.json({ success: false, message: err }); // Return error message
-              } else {
-                // Check if user was found in the database
-                if (!user) {
-                  res.json({ success: false, message: 'Unable to authenticate user.' }); // Return error message
-                } else {
-                  // Check if user logged in the the one requesting to update ticket post
-                  if (user.username !== ticket.createdBy) {
-                    res.json({ success: false, message: 'You are not authorized to edit this ticket post.' }); // Return error message
-                  } else {
-                    ticket.title = req.body.title; // Save latest ticket title
-                    ticket.body = req.body.body; // Save latest body
-                    ticket.save((err) => {
-                      if (err) {
-                        if (err.errors) {
-                          res.json({ success: false, message: 'Please ensure form is filled out properly' });
-                        } else {
-                          res.json({ success: false, message: err }); // Return error message
-                        }
-                      } else {
-                        res.json({ success: true, message: 'Ticket Updated!' }); // Return success message
-                      }
-                    });
-                  }
-                }
-              }
-            });
-          }
-        }
-      });
-    }
-  };
 
   /* ===============================================================
      DELETE BLOG POST

@@ -2,8 +2,9 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
+
 import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './/app-routing.module';
@@ -20,6 +21,11 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import { AuthService } from './services/auth.service';
 import { AuthGuard } from './guards/auth.guard';
 import { NotAuthGuard } from './guards/notAuth.guard';
+import { TicketDetailComponent } from './components/ticket/ticket-detail/ticket-detail.component';
+import { TicketListComponent } from './components/ticket/ticket-list/ticket-list.component';
+import { TicketService } from './services/ticket.service';
+import { AlertService } from './services/alert.service';
+import { WebsocketService } from './services/websocket.service';
 
 @NgModule({
   declarations: [
@@ -31,12 +37,15 @@ import { NotAuthGuard } from './guards/notAuth.guard';
     DashboardComponent,
     CondominioComponent,
     HomeComponent,
-    NavbarComponent
+    NavbarComponent,
+    TicketDetailComponent,
+    TicketListComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpModule,
+    HttpClientModule,
+    CommonModule,
     ReactiveFormsModule,
     FormsModule,
     BrowserAnimationsModule,
@@ -48,7 +57,7 @@ import { NotAuthGuard } from './guards/notAuth.guard';
     MatFormFieldModule
 
   ],
-  providers: [AuthService, AuthGuard, NotAuthGuard],
+  providers: [AuthService, AuthGuard, NotAuthGuard, TicketService, AlertService, AuthService, WebsocketService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

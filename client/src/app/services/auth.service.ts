@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http, Headers, RequestOptions } from '@angular/http';
+import { HttpClient, HttpHeaders, HttpRequest } from '@angular/common/http';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/find';
 import { tokenNotExpired } from 'angular2-jwt';
@@ -15,7 +15,7 @@ export class AuthService {
     user: any;
     options;
     constructor(
-      private http: Http
+      private http: HttpClient
     ) {
 
     }
@@ -24,12 +24,12 @@ export class AuthService {
     createAuthenticationHeaders() {
       this.loadToken(); // Get token so it can be attached to headers
       // Headers configuration options
-      this.options = new RequestOptions({
-        headers: new Headers({
-          'Content-Type': 'application/json', // Format set to JSON
+      const httpOptions = {
+        headers: new HttpHeaders({
+          'Content-Type':  'application/json',
           'authorization': this.authToken // Attach token
         })
-      });
+  }
     }
 
     // Function to get token from client local storage
@@ -41,22 +41,22 @@ export class AuthService {
     // Function to register user accounts
     registerUser(user) {
       this.createAuthenticationHeaders(); // Create headers
-      return this.http.post(this.domain + 'api/register', user).map(res => res.json());
+      return this.http.post(this.domain + 'register', user);
     }
 
     // Function to check if username is taken
     checkUsername(username) {
-      return this.http.get(this.domain + 'api/checkUsername/' + username).map(res => res.json());
+      return this.http.get(this.domain + 'checkUsername/' + username);
     }
 
     // Function to check if e-mail is taken
     checkEmail(email) {
-      return this.http.get(this.domain + 'api/checkEmail/' + email).map(res => res.json());
+      return this.http.get(this.domain + 'checkEmail/' + email);
     }
 
     // Function to login user
     login(user) {
-      return this.http.post(this.domain + 'api/login', user).map(res => res.json());
+      return this.http.post(this.domain + 'login', user);
     }
 
     // Function to logout
@@ -77,25 +77,25 @@ export class AuthService {
     // Function to get user's profile data
     getProfile() {
       this.createAuthenticationHeaders(); // Create headers before sending to API
-      return this.http.get(this.domain + 'api/profile', this.options).map(res => res.json());
+      return this.http.get(this.domain + 'profile', this.options);
     }
     getUsers(id) {
       this.createAuthenticationHeaders(); // Create headers before sending to API
-      return this.http.get(this.domain + 'api/profile/' + id, this.options).map(res => res.json());
+      return this.http.get(this.domain + 'profile/' + id, this.options);
     }
 
     // Function to get public profile data
     getPublicProfile(username) {
       this.createAuthenticationHeaders(); // Create headers before sending to API
-      return this.http.get(this.domain + 'api/publicProfile/' + username, this.options)
-      .map(res => res.json());
+      return this.http.get(this.domain + 'publicProfile/' + username, this.options)
+      ;
     }
 
 
     // Function to get all condominios from the database
     getAllCondominios() {
       this.createAuthenticationHeaders(); // Create headers
-      return this.http.get(this.domain + 'api/allCondominios', this.options).map(res => res.json());
+      return this.http.get(this.domain + 'allCondominios', this.options);
     }
     // Function to check if user is logged in
     loggedIn() {

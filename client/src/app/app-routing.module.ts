@@ -33,8 +33,7 @@ const appRoutes: Routes = [
 
     {
       path: 'ticket',
-      component: TicketComponent, // Ticket Route,
-      canActivate: [AuthGuard] // User must be logged in to view this route
+      component: TicketComponent
     },
     { path: '**', component: HomeComponent } // "Catch-All" Route
   ];
