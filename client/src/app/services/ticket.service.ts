@@ -18,6 +18,7 @@ export class TicketService {
     options;
     domain = this.authService.domain;
     private socket;
+    authToken: any;
   constructor(
       private http: HttpClient,
       private authService: AuthService,
@@ -32,7 +33,8 @@ createAuthenticationHeaders() {
     // Headers configuration options
     const httpOptions = {
         headers: new HttpHeaders({
-          'Content-Type':  'application/json'
+          'Content-Type':  'application/json',
+          'authorization': this.authToken // Attach token
         })
   }
 }

@@ -89,13 +89,13 @@ exports.login = (req, res, next)=>{
                   res.json({ success: false, message: 'Password invalid' }); // Return error
                 } else {
                   const token = jwt.sign({ userId: user._id }, config.secret, { expiresIn: '24h' }); // Create a token for client
-                  
+
                   res.json({
                     success: true,
                     message: 'Success!',
                     token: token,
                     user: {
-                      
+
                       username: user.username,
                       userCondominio: user.condominio
                     }
@@ -109,7 +109,7 @@ exports.login = (req, res, next)=>{
 }
 
 exports.roleAuthorization = (roles) => {
- 
+
   return function(req, res, next){
 
       var user = req.user;
@@ -156,18 +156,18 @@ exports.use = (req, res, next)=>{
 var token = req.body.token || req.query.token || req.headers['authorization'];
   //console.log(token);
 if (token) {
-  jwt.verify(token, config.secret, function(err, decoded) {			
+  jwt.verify(token, config.secret, function(err, decoded) {
     if (err) {
-      return res.status(201).json({ success: false, message: 'Authenticate token expired, please login again.', errcode: 'exp-token' });		
+      return res.status(201).json({ success: false, message: 'Authenticate token expired, please login again.', errcode: 'exp-token' });
     } else {
-      req.decoded = decoded;	
+      req.decoded = decoded;
       console.log()
       next();
     }
   });
 } else {
-  return res.status(201).json({ 
-    success: false, 
+  return res.status(201).json({
+    success: false,
     message: 'Fatal error, Authenticate token not available.',
               errcode: 'no-token'
   });
@@ -219,7 +219,7 @@ if (token) {
     exports.profile = (req, res) => {
       // Search for user in database
       User.findOne({ _id: req.decoded.userId }).select('username email condominio name')
-      .populate('condominio').exec((err, user) => {
+      .populate().exec((err, user) => {
         // Check if error connecting
         if (err) {
           res.json({ success: false, message: err }); // Return error
@@ -229,13 +229,13 @@ if (token) {
             res.json({ success: false, message: 'User not found' }); // Return error, user was not found in db
           } else {
             res.json({ success: true, user: user }); // Return success, send user object to frontend for profile
-            
+
           }
         }
       });
     };
 
-   
+
 
     // exports.getuser = (req, res, next)=>{
     //   res.json({user: req.user});
@@ -243,11 +243,11 @@ if (token) {
     //   // Check if error connecting
     //   if (err) {
     //     res.status({ success: false, message: err }); // Return error
-    //   } 
+    //   }
     //   res.status({success: user});// Return success, send user object to frontend for profile
     //       console.log('dados do usuário', user);
     //     })
-      
-    
-    
+
+
+
     // }

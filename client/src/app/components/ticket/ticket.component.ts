@@ -7,6 +7,7 @@ import { Ticket } from '../../models/ticket';
 import { AlertService } from '../../services/alert.service';
 import { AuthService } from '../../services/auth.service';
 import { Subscription } from 'rxjs/Subscription';
+
 environment
 @Component({
   selector: 'app-ticket',
@@ -18,23 +19,25 @@ export class TicketComponent implements OnInit, OnDestroy {
   ticket:any = {};
   ticketToEdit:any = {};
   ticketToDelete:any = {};
-  fetchingData:boolean = false;
-  apiTicket:string;
+  username;
   domain = environment.domain;
   private socket;
     ticketForm;
     sub: Subscription;
-
+    user;
+    profile;
     constructor(
         private ticketService:TicketService,
         private formBuilder: FormBuilder,
         private alertService: AlertService,
         private authService: AuthService,
     ) {
+
         this.createNewTicketForm();
 
     }
     ngOnInit(): void{
+
         this.ticketService.getTickets().subscribe(data => {
             this.tickets = data;
 
@@ -46,6 +49,10 @@ export class TicketComponent implements OnInit, OnDestroy {
           console.log(ticket);
         })
     });
+    this.authService.getProfile().subscribe(profile => {
+        this.profile = profile; // Used when creating new ticket posts and comments
+        console.log(this.profile);
+      });
    }
    ngOnDestroy() {
     this.sub.unsubscribe();
@@ -71,16 +78,18 @@ export class TicketComponent implements OnInit, OnDestroy {
     public sendTicket() {
         const ticket = {
             title: this.ticketForm.get('title').value, // Title field
-            body: this.ticketForm.get('body').value // Body field
+            body: this.ticketForm.get('body').value, // Body field
+            createdBy: this.user // CreatedBy field
           }
           this.ticketService.createTicket(ticket)
 
         this.ticketService.sendTicket(ticket).subscribe(data => {
-            console.log(data);
+        console.log(data);
             },
             error => {
               this.alertService.error(error.error.error?error.error.error:error.ticket);
             });
+        this.ticketForm.reset();
       }
 
 

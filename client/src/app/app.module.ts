@@ -5,6 +5,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
+import { HttpModule } from '@angular/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './/app-routing.module';
@@ -45,6 +46,7 @@ import { WebsocketService } from './services/websocket.service';
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
+    HttpModule,
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
