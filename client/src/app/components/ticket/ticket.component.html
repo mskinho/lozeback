@@ -17,6 +17,7 @@
     <!-- Panel Title -->
     <div class="panel-heading">
       <h3 class="panel-title">{{ ticket?.title }}</h3>
+      <a [routerLink]="['/ticket-detail/', ticket._id] "  ><button mat-stroked-button color="primary">Acessar</button></a>
     </div>
 
     <!-- Panel Body -->

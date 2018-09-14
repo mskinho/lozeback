@@ -17,7 +17,7 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { CondominioComponent } from './components/condominio/condominio.component';
 import { HomeComponent } from './components/home/home.component';
 import {MatButtonModule, MatCheckboxModule, MatCardModule, MatToolbarModule, MatInputModule,
-MatFormFieldModule } from '@angular/material';
+MatFormFieldModule, MatSnackBarModule } from '@angular/material';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { AuthService } from './services/auth.service';
 import { AuthGuard } from './guards/auth.guard';
@@ -27,6 +27,9 @@ import { TicketListComponent } from './components/ticket/ticket-list/ticket-list
 import { TicketService } from './services/ticket.service';
 import { AlertService } from './services/alert.service';
 import { WebsocketService } from './services/websocket.service';
+import { TicketcommentComponent } from './components/ticket/ticketcomment/ticketcomment.component';
+import { CommentService } from './services/comment.service';
+import { TicketcommentPipe } from './components/ticket/ticketcomment.pipe';
 
 @NgModule({
   declarations: [
@@ -40,7 +43,9 @@ import { WebsocketService } from './services/websocket.service';
     HomeComponent,
     NavbarComponent,
     TicketDetailComponent,
-    TicketListComponent
+    TicketListComponent,
+    TicketcommentComponent,
+    TicketcommentPipe
   ],
   imports: [
     BrowserModule,
@@ -50,16 +55,18 @@ import { WebsocketService } from './services/websocket.service';
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
+
     BrowserAnimationsModule,
     MatButtonModule,
     MatCheckboxModule,
     MatCardModule,
     MatToolbarModule,
     MatInputModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    MatSnackBarModule
 
   ],
-  providers: [AuthService, AuthGuard, NotAuthGuard, TicketService, AlertService, AuthService, WebsocketService],
+  providers: [AuthService, AuthGuard, NotAuthGuard, TicketService, AlertService, AuthService, WebsocketService, CommentService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

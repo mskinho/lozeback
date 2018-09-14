@@ -9,10 +9,13 @@
 /node_modules
 client/node_modules
 server/node_modules
+functions/node_modules
 client/package-lock.json
 server/package-lock.json
 # IDEs and editors
 /.idea
+.firebaserc
+firebase.json
 .project
 .classpath
 .c9/

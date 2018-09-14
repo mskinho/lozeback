@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import * as io from 'socket.io-client';
 import { TicketService } from '../../services/ticket.service';
 import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
@@ -7,14 +7,16 @@ import { Ticket } from '../../models/ticket';
 import { AlertService } from '../../services/alert.service';
 import { AuthService } from '../../services/auth.service';
 import { Subscription } from 'rxjs/Subscription';
+import { CommentService } from '../../services/comment.service';
 
-environment
+
 @Component({
   selector: 'app-ticket',
   templateUrl: './ticket.component.html',
   styleUrls: ['./ticket.component.css']
 })
 export class TicketComponent implements OnInit, OnDestroy {
+    @Input() comment: Comment;
   tickets:Ticket[] = [];
   ticket:any = {};
   ticketToEdit:any = {};
@@ -37,9 +39,12 @@ export class TicketComponent implements OnInit, OnDestroy {
 
     }
     ngOnInit(): void{
-
+        this.authService.getProfile().subscribe(profile => {
+            this.profile = profile; // Used when creating new ticket posts and comments
+            console.log(this.username);
+          });
         this.ticketService.getTickets().subscribe(data => {
-            this.tickets = data;
+            this.tickets = data.tickets;
 
         this.socket = io(this.domain);
         // Receive Added Ticket
@@ -49,10 +54,7 @@ export class TicketComponent implements OnInit, OnDestroy {
           console.log(ticket);
         })
     });
-    this.authService.getProfile().subscribe(profile => {
-        this.profile = profile; // Used when creating new ticket posts and comments
-        console.log(this.profile);
-      });
+
    }
    ngOnDestroy() {
     this.sub.unsubscribe();
@@ -79,7 +81,7 @@ export class TicketComponent implements OnInit, OnDestroy {
         const ticket = {
             title: this.ticketForm.get('title').value, // Title field
             body: this.ticketForm.get('body').value, // Body field
-            createdBy: this.user // CreatedBy field
+            createdBy: this.profile.user.username // CreatedBy field
           }
           this.ticketService.createTicket(ticket)
 

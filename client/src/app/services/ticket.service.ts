@@ -1,13 +1,11 @@
 import { Injectable } from '@angular/core';
 import { AuthService } from './auth.service';
-import { HttpClient, HttpHeaders, HttpRequest } from '@angular/common/http';
+import { Http, Headers, RequestOptions, Response } from '@angular/http';
 import {Subject, BehaviorSubject, Observable, ConnectableObservable} from 'rxjs';
 import { Observer } from 'rxjs/Observer';
 import { Ticket } from "../models/ticket";
 import 'rxjs/add/operator/toPromise';
 import { environment } from '../../environments/environment';
-import { MessagingEvent } from '../models/messagingevent';
-import { WebsocketService } from './websocket.service';
 import * as io from 'socket.io-client';
 
 @Injectable({
@@ -20,42 +18,47 @@ export class TicketService {
     private socket;
     authToken: any;
   constructor(
-      private http: HttpClient,
+      private http: Http,
       private authService: AuthService,
-      private socketService: WebsocketService
+
       ){
         this.socket = io(environment.domain);
 
 }
-// Function to create headers, add token, to be used in HTTP requests
-createAuthenticationHeaders() {
-
+ // Function to create headers, add token, to be used in HTTP requests
+ createAuthenticationHeaders() {
+    this.authService.loadToken(); // Get token so it can be attached to headers
     // Headers configuration options
-    const httpOptions = {
-        headers: new HttpHeaders({
-          'Content-Type':  'application/json',
-          'authorization': this.authToken // Attach token
-        })
+    this.options = new RequestOptions({
+      headers: new Headers({
+        'Content-Type': 'application/json', // Format set to JSON
+        'authorization': this.authService.authToken // Attach token
+      })
+    });
   }
-}
 createTicket(ticket:any): void{
     this.socket.emit('addTicket', ticket);
   }
-  public onTicket(): Observable<Ticket> {
-    return new Observable<Ticket>(observer => {
-        this.socket.on('ticket', (data) => observer.next(data));
-        console.log('recebendo dados websocket')
-    });
-}
+  public onTicket() {
+    let observable = new Observable(observer => {
+          this.socket.on('ticket', (data) => {
+          observer.next(data);
+        });
+
+      })
+      return observable;
+    }
  sendTicket(ticket) {
       this.createAuthenticationHeaders(); // Create headers
-    return this.http.post<any>(`${this.domain}/api/addTicket`,  ticket );
+    return this.http.post(this.domain +'/api/addTicket',  ticket,  this.options ).map(res => res.json());
+  }
+  getTicket(id: string){
+    this.createAuthenticationHeaders(); // Create headers
+    return this.http.get(this.domain + '/api/oneTicket/' + id, this.options).map(res => res.json());
   }
  getTickets(){
     this.createAuthenticationHeaders(); // Create headers
-    return this.http.get<any>(`${this.domain}/api/getTickets`)
-    .map(data => {return data.tickets
-    });
+    return this.http.get(this.domain+'/api/getTickets',  this.options).map(res => res.json());
   }
 
 

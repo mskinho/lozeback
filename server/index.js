@@ -13,12 +13,13 @@ const path = require('path'); // NodeJS Package for file paths
 const socketEvents = require('./socketEvents');
 const authentication = require('./routes/authentication'); // Import Authentication Routes
 const tickets = require('./routes/tickets'); // Import Ticket Routes
+const comments = require('./routes/comments');
 const bodyParser = require('body-parser'); // Parse incoming request bodies in a middleware before your handlers, available under the req.body property.
 const SourceMapSupport = require('source-map-support');
 const server = app.listen(8080);
 const io = require('socket.io').listen(server);
 const cors = require('cors'); // CORS is a node.js package for providing a Connect/Express middleware that can be used to enable CORS with various options.
-const    TicketController = require ( './controllers/ticket');
+
 
  // Allows heroku to set port
 // Database Connection
@@ -49,11 +50,17 @@ io.on('connection', (socket) => {
       console.log('data emit: ', ticket);
 
     });
+    socket.on('addComment', (comment) => {
+        console.log('socketData: ', comment);
+        io.emit('comment', comment);
+        console.log('data emit: ', comment);
 
+      });
   })
   SourceMapSupport.install();
   app.use('/api', authentication); // Use Authentication routes in application
   app.use('/api', tickets); // Use Ticket routes in application
+  app.use('/api', comments);
   app.get('/', (req,res) => {
       return res.end('Api working');
     });

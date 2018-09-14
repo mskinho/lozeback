@@ -1,9 +1,5 @@
-
-
 export interface Ticket {
-
-
-    title:string;
-    body:string;
-
-  }
+_id: number;
+title:string;
+body:string;
+}

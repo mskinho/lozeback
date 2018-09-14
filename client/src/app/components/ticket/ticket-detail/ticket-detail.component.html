@@ -1,3 +1,17 @@
-<p>
-  ticket-detail works!
-</p>
+<div *ngIf="ticket" class="ticket-box">
+
+<div id="ticket-head-card">
+
+    <div class="data">
+     <h1>{{ticket?.title}}</h1>
+    <p class="description"> {{ ticket.body }}</p>
+     </div>
+ </div>
+    <div class="content">
+     <h4 >New comment</h4>
+    <app-ticketcomment [ticket]= "ticket" ></app-ticketcomment>
+    </div>
+
+
+
+        </div>

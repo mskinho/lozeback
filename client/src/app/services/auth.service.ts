@@ -14,6 +14,7 @@ export class AuthService {
     domain = environment.domain;
     authToken: any;
     username: any;
+    user;
     options;
     constructor(
       private http: Http
@@ -62,7 +63,7 @@ export class AuthService {
 
   // Function to logout
   logout() {
-    this.authToken = null; // Set token to null
+    this.authToken = null; // Set token to null'
     this.user = null; // Set user to null
     localStorage.clear(); // Clear local storage
   }

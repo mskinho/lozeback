@@ -8,6 +8,9 @@ import { LoginComponent } from './components/login/login.component';
 import { TicketComponent } from './components/ticket/ticket.component';
 import { NotAuthGuard } from './guards/notAuth.guard';
 import { AuthGuard } from './guards/auth.guard';
+import { CommentComponent } from './components/comment/comment.component';
+import { TicketcommentComponent } from './components/ticket/ticketcomment/ticketcomment.component';
+import { TicketDetailComponent } from './components/ticket/ticket-detail/ticket-detail.component';
 
 //Routes
 const appRoutes: Routes = [
@@ -33,8 +36,19 @@ const appRoutes: Routes = [
 
     {
       path: 'ticket',
-      component: TicketComponent
+      component: TicketComponent,
+      canActivate: [AuthGuard] // User must be logged in to view this route
     },
+    {
+        path: 'ticket-detail/:id',
+        component: TicketDetailComponent, //Acessar detalhes
+        canActivate: [AuthGuard] // User must be logged in to view this route
+      },
+    {
+        path: 'ticketcomment',
+        component: TicketcommentComponent,
+        canActivate: [AuthGuard] // User must be logged in to view this route
+      },
     { path: '**', component: HomeComponent } // "Catch-All" Route
   ];
 
